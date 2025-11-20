@@ -1,6 +1,8 @@
 const affichage = document.getElementById("formulaire");
 const affbtn = document.getElementById("addEmployer");
 
+
+
 affbtn.addEventListener('click', () =>{
     affichage.classList.toggle("hidden");
 })
@@ -51,12 +53,12 @@ affichage.addEventListener('click', (e)=>{
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-sm font-medium text-gray-600">Start Date</label>
-            <input type="date" class="w-full border rounded-lg p-2">
+            <input type="date" class="start-date w-full border rounded-lg p-2">
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-600">End Date</label>
-            <input type="date" class="w-full border rounded-lg p-2">
+            <input type="date" class="end-date w-full border rounded-lg p-2">
           </div>
         </div>
       </div>
@@ -73,8 +75,8 @@ affichage.addEventListener('click', (e)=>{
   }
 
   //submit for the form
-const submit = document.getElementById('submitbtn');
-submit.addEventListener('click', (e) => {
+    const submit = document.getElementById('submitbtn');
+    submit.addEventListener('click', (e) => {
     e.preventDefault();
     const name = document.getElementById("name");
     const role = document.getElementById("role");
@@ -107,19 +109,28 @@ submit.addEventListener('click', (e) => {
     }else{
       phone.classList.remove("border-red-600")
     }
-  const expBlocks = document.querySelectorAll("#experienceContainer > div");
-  const experiences = [];
-  
-  expBlocks.forEach(block => {
-      const jobTitle = block.querySelector("input[type='text']").value.trim();
-      const startDate = block.querySelector("input#start-date").value;
-      const endDate = block.querySelector("input#end-date").value;
-       experiences.push({
-          jobTitle,
-          startDate,
-          endDate
-      });
-  });
+
+
+    const expBlocks = document.querySelectorAll("#experienceContainer > div");
+    const experiences = [];
+
+    for (const block of expBlocks) {
+        const jobTitle = block.querySelector("input[type='text']").value.trim();
+        const startDate = block.querySelector(".start-date").value;
+        const endDate = block.querySelector(".end-date").value;
+
+        if (!startDate || !endDate) {
+            alert("Please fill both start and end dates.");
+            return;
+        }
+
+        if (new Date(startDate) >= new Date(endDate)) {
+            alert("Start date must be earlier than end date.");
+            return;
+        }
+
+        experiences.push({ jobTitle, startDate, endDate });
+    }
       const employee = {
       name : name.value,
       role : role.value,
@@ -135,24 +146,36 @@ submit.addEventListener('click', (e) => {
     const dataform = document.getElementById("employeeForm");
     dataform.reset();
     affichage.classList.add("hidden");
-
+    DisplayTheEmplyers();
     
 });
-function DisplayTheEmplyers(){
+DisplayTheEmplyers();
+function DisplayTheEmplyers() {
     const EmpLister = document.getElementById("displayerOfEmployers");
+
+    const employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+    const counter = document.querySelector("h2 span");
+    counter.textContent = employees.length;
+
     let html = "";
-    employees.forEach(employ =>{
+
+    employees.forEach(employ => {
         html += `
-        <div class="flex w-[80%] h-16 bg-white gap-2 rounded-xl">
-        <img src="${employees.img}"class ="flex justify-center items-center h-16 w-16 bg-black rounded-xl" >
-        <div >
-          <h6 class="font-bold">${employees.name}</h6>
-          <p>${employees.role}</p>
+        <div class="flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2">
+          <img src="${employ.img || 'https://via.placeholder.com/150'}"
+               class="h-14 w-14 bg-gray-300 rounded-xl object-cover">
+          <div>
+            <h6 class="font-bold">${employ.name}</h6>
+            <p class="text-sm text-gray-600">${employ.role}</p>
+          </div>
         </div>
-        </div>`
+        `;
     });
+
     EmpLister.innerHTML = html;
 }
+
 
 
 //RGX
