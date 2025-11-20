@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRIEF | SOUTENONCE CROISEE</title>
+  <link rel="icon" type="image/jpg" href="img/icon.jpg">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+</head>
+
+<body class="font-['open_sans']">
+  <main class="w-full h-screen flex flex-col xl:flex-row gap-0.5">
+    <section class="  relative w-full h-100 md:w-screen md:h-screen xl:w-700 xl:h-screen 2xl:w-1400">
+      <img class="w-full h-full" src="Floor-Plan.jpg" alt="the company floor">
+      <div class="w-full h-full absolute gap-x-2 top-0">
+      </div>
+    </section>
+    <section class="bg-[#91908f] w-full h-full flex justify-center items-center">
+      <div class="border border-black rounded-xl bg-white/30 w-[80%] h-[80%] relative flex justify-center items-center">
+        <h2 class="absolute top-0 mt-3 font-bold text-2xl ">Employers (<span>0</span>) </h2>
+        <div id="displayerOfEmployers" class="flex flex-row justify-center py-8 h-[85%] w-[85%] bg-[#d1d0d0] rounded-2xl gap-2 ">
+
+          
+
+        </div>
+        <button id="addEmployer"
+          class="font-bold absolute bottom-2 rounded-2xl bg-white p-2 w-[80%] hover:bg-black hover:text-white hover:scale-110 duration-500  ">ADD
+          A EMPLOYER</button>
+      </div>
+    </section>
+    <!-- Employee Modal -->
+    <div id="formulaire" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 "
+      id="addEmployeeModal">
+      <div
+        class="bg-white w-full max-w-lg rounded-xl shadow-xl p-6 overflow-scroll [scrollbar-width:none] max-h-[90vh]">
+
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Add New Employee</h2>
+
+        <form id="employeeForm" class="space-y-4 ">
+
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Name</label>
+            <input id="name" type="text" class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Enter name" required>
+          </div>
+
+          <!-- Role -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Role</label>
+            <select id="role" class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300">
+              <option value="">Select role</option>
+              <option>Manager</option>
+              <option>Receptionist</option>
+              <option>IT Technician</option>
+              <option>Security Officer</option>
+              <option>Cleaning</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <!-- Photo URL -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Photo URL</label>
+            <input id="employeePhotoInput" type="text"
+              class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="https://image.jpg">
+          </div>
+          <div class="flex justify-center items-center">
+            <div
+              class="w-30 h-30 rounded-full bg-gray-100 border border-gray-300  flex items-center justify-center overflow-hidden">
+              <img id="photoPreview" src="" alt="Preview" class="max-h-full hidden">
+              <span class="text-gray-500 text-sm" id="previewPlaceholder">Image preview here</span>
+            </div>
+          </div>
+
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+            <input id="email" type="email" class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="email@example.com" required>
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+            <input id="phone" type="tel" class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="+212 600 000 000" required>
+          </div>
+
+          <!-- Work Experience -->
+          <div class="border rounded-lg p-4">
+            <h3 class="font-medium text-gray-700 mb-2">Work Experience</h3>
+
+            <div class="space-y-4" id="experienceContainer">
+              <!-- One experience block-->
+              <div  class="p-3 border rounded-lg bg-gray-50">
+                <label class="block text-sm font-medium text-gray-600 mb-1">Job Title</label>
+                <input type="text" class="w-full border rounded-lg p-2 mb-2">
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Start Date</label>
+                    <input type="date" id="start-date" class="w-full border rounded-lg p-2">
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">End Date</label>
+                    <input type="date" id="end-date" class="w-full border rounded-lg p-2">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- experience button -->
+            <button type="button" id="addExperienceBtn"
+              class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
+              + Add Experience
+            </button>
+          </div>
+
+          <!-- Submit -->
+          <button id="submitbtn" type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg text-lg">
+            Add Employee
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+
+</html>
