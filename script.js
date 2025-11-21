@@ -1,7 +1,19 @@
 const affichage = document.getElementById("formulaire");
 const affbtn = document.getElementById("addEmployer");
 
+const zoneRules = {
+    "Conference Room": ["Manager", "Receptionist", "IT Technician", "Security Officer", "Cleaning", "Other"],
+    "Reception": ["Receptionist"],
+    "Server Room": ["IT Technician"],
+    "Security Room": ["Security Officer"],
+    "Staff Room": ["Manager", "Receptionist", "IT Technician", "Security Officer", "Cleaning", "Other"],
+    "Archives Room": ["Manager", "Receptionist", "IT Technician", "Security Officer", "Other"]
+};
+
+
 DisplayTheEmplyers();
+displayEmployeesInZones();
+
 
 affbtn.addEventListener('click', () =>{
     affichage.classList.toggle("hidden");
@@ -167,7 +179,7 @@ function DisplayTheEmplyers() {
         html += `
         <div onclick="openProfile(${index})"
         class="cursor-pointer flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2 hover:bg-gray-200 duration-200">
-          <img src="${employ.img || 'https://via.placeholder.com/150'}"
+          <img src="${employ.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}"
                class="h-14 w-14 bg-gray-300 rounded-xl object-cover">
           <div>
             <h6 class="font-bold">${employ.name}</h6>
@@ -227,9 +239,84 @@ document.getElementById("profileModal").addEventListener("keydown", (e) => {
 document.addEventListener('click', (x) =>{
   if(x.target.classList.contains("floorzoonbtn")){
      document.querySelector(".pickerZone").classList.remove("hidden");
-     
+     const zone = x.target.dataset.zone;
+      openZonePicker(zone); 
   }
 })
 document.querySelector(".pickerZone").addEventListener('click', (e) =>{
   document.querySelector(".pickerZone").classList.add("hidden");
 })
+function openZonePicker(zone) {
+    const picker = document.querySelector(".pickerZone");
+    const showZone = document.querySelector(".showZone");
+
+    const employees = JSON.parse(localStorage.getItem("employees")) || [];
+    const validRoles = zoneRules[zone];
+
+    // Filter employees by allowed role
+    const eligible = employees.filter(emp => validRoles.includes(emp.role));
+
+    showZone.innerHTML = `<h2 class="text-center font-bold">${zone}</h2>`;
+
+    if (eligible.length === 0) {
+        showZone.innerHTML += `<p class="text-red-600 mt-4">No employees eligible for this zone.</p>`;
+        picker.classList.remove("hidden");
+        return;
+    }
+
+    eligible.forEach((emp, index) => {
+        showZone.innerHTML += `
+            <div onclick="assignEmployeeToZone('${emp.name}', '${zone}')"
+                 class="cursor-pointer w-[90%] bg-white p-2 rounded-lg flex gap-2 items-center hover:bg-gray-200 duration-200">
+
+                <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-12 w-12 rounded-lg object-cover bg-gray-300">
+                <div>
+                    <h4 class="font-bold">${emp.name}</h4>
+                    <p class="text-sm text-gray-600">${emp.role}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    picker.classList.remove("hidden");
+}
+function assignEmployeeToZone(name, zone) {
+    let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+    employees = employees.map(emp => {
+        if (emp.name === name) {
+            emp.currentZone = zone; // save zone
+        }
+        return emp;
+    });
+
+    localStorage.setItem("employees", JSON.stringify(employees));
+
+    document.querySelector(".pickerZone").classList.add("hidden");
+
+    displayEmployeesInZones();
+
+    alert(`${name} assigned to ${zone}`);
+
+    DisplayTheEmplyers();
+}
+
+function displayEmployeesInZones() {
+    const employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+
+    document.querySelectorAll(".zone-display").forEach(z => z.innerHTML = "");
+
+    employees.forEach(emp => {
+        if (!emp.currentZone) return;
+
+        const zoneDiv = document.querySelector(
+            `[data-zone='${emp.currentZone}']`
+        ).parentElement.querySelector(".zone-display");
+
+        zoneDiv.innerHTML = `
+            <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-10 w-10 rounded-full object-cover border mb-1">
+            <p>${emp.name}</p>
+        `;
+    });
+}
