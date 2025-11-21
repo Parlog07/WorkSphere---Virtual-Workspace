@@ -152,6 +152,7 @@ affichage.addEventListener('click', (e)=>{
       email : email.value,
       phone : phone.value,
       experiences,
+      currentZone: null
   };
    const storedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
    storedEmployees.push(employee);
@@ -169,21 +170,22 @@ function DisplayTheEmplyers() {
     const EmpLister = document.getElementById("displayerOfEmployers");
     const employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-    // Update counter
     const counter = document.querySelector("h2 span");
-    counter.textContent = employees.length;
+    const unassigned = employees.filter(e => !e.currentZone);
+
+    counter.textContent = unassigned.length;
 
     let html = "";
 
-    employees.forEach((employ, index) => {
+    unassigned.forEach((emp, index) => {
         html += `
         <div onclick="openProfile(${index})"
-        class="cursor-pointer flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2 hover:bg-gray-200 duration-200">
-          <img src="${employ.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}"
+            class="cursor-pointer flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2 hover:bg-gray-200 duration-200">
+          <img src="${emp.img || 'https://via.placeholder.com/150'}"
                class="h-14 w-14 bg-gray-300 rounded-xl object-cover">
           <div>
-            <h6 class="font-bold">${employ.name}</h6>
-            <p class="text-sm text-gray-600">${employ.role}</p>
+            <h6 class="font-bold">${emp.name}</h6>
+            <p class="text-sm text-gray-600">${emp.role}</p>
           </div>
         </div>
         `;
@@ -191,6 +193,7 @@ function DisplayTheEmplyers() {
 
     EmpLister.innerHTML = html;
 }
+
 //HEre is the part of showing the profile
 function openProfile(index) {
     const employees = JSON.parse(localStorage.getItem("employees")) || [];
@@ -285,7 +288,7 @@ function assignEmployeeToZone(name, zone) {
 
     employees = employees.map(emp => {
         if (emp.name === name) {
-            emp.currentZone = zone; // save zone
+            emp.currentZone = zone;
         }
         return emp;
     });
@@ -304,7 +307,6 @@ function assignEmployeeToZone(name, zone) {
 function displayEmployeesInZones() {
     const employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-
     document.querySelectorAll(".zone-display").forEach(z => z.innerHTML = "");
 
     employees.forEach(emp => {
@@ -315,8 +317,31 @@ function displayEmployeesInZones() {
         ).parentElement.querySelector(".zone-display");
 
         zoneDiv.innerHTML = `
-            <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-10 w-10 rounded-full object-cover border mb-1">
-            <p>${emp.name}</p>
+            <div class="flex flex-col items-center">
+                <img src="${emp.img || ''}" class="h-10 w-10 rounded-full object-cover border mb-1">
+                <p class="text-white">${emp.name}</p>
+
+                <button onclick="removeFromZone('${emp.name}')"
+                    class="mt-1 bg-red-600 text-white px-2 py-1 rounded text-xs">
+                    Remove
+                </button>
+            </div>
         `;
     });
 }
+function removeFromZone(name) {
+    let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+    employees = employees.map(emp => {
+        if (emp.name === name) {
+            emp.currentZone = null;
+        }
+        return emp;
+    });
+
+    localStorage.setItem("employees", JSON.stringify(employees));
+
+    DisplayTheEmplyers();
+    displayEmployeesInZones();
+}
+
