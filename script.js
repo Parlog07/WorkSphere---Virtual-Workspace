@@ -1,7 +1,7 @@
 const affichage = document.getElementById("formulaire");
 const affbtn = document.getElementById("addEmployer");
 
-
+DisplayTheEmplyers();
 
 affbtn.addEventListener('click', () =>{
     affichage.classList.toggle("hidden");
@@ -48,8 +48,9 @@ affichage.addEventListener('click', (e)=>{
     div.innerHTML = `
       <div class="space-y-2">
         <label class="block text-sm font-medium text-gray-600">Job Title</label>
-        <input type="text" class="w-full border rounded-lg p-2">
-
+        <input type="text" class="jobTitle w-full border rounded-lg p-2">
+                <label class="block text-sm font-medium text-gray-600 mb-1">Company Name</label>
+                <input type="text" class="companyName w-full border rounded-lg p-2 mb-2">
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-sm font-medium text-gray-600">Start Date</label>
@@ -115,7 +116,8 @@ affichage.addEventListener('click', (e)=>{
     const experiences = [];
 
     for (const block of expBlocks) {
-        const jobTitle = block.querySelector("input[type='text']").value.trim();
+        const jobTitle = block.querySelector(".jobTitle").value.trim();
+        const Company = block.querySelector(".companyName").value.trim();
         const startDate = block.querySelector(".start-date").value;
         const endDate = block.querySelector(".end-date").value;
 
@@ -129,7 +131,7 @@ affichage.addEventListener('click', (e)=>{
             return;
         }
 
-        experiences.push({ jobTitle, startDate, endDate });
+        experiences.push({ jobTitle, Company, startDate, endDate });
     }
       const employee = {
       name : name.value,
@@ -149,20 +151,22 @@ affichage.addEventListener('click', (e)=>{
     DisplayTheEmplyers();
     
 });
-DisplayTheEmplyers();
+
+// here is the part to diplay the employerws on the list zone
 function DisplayTheEmplyers() {
     const EmpLister = document.getElementById("displayerOfEmployers");
-
     const employees = JSON.parse(localStorage.getItem("employees")) || [];
 
+    // Update counter
     const counter = document.querySelector("h2 span");
     counter.textContent = employees.length;
 
     let html = "";
 
-    employees.forEach(employ => {
+    employees.forEach((employ, index) => {
         html += `
-        <div class="flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2">
+        <div onclick="openProfile(${index})"
+        class="cursor-pointer flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2 hover:bg-gray-200 duration-200">
           <img src="${employ.img || 'https://via.placeholder.com/150'}"
                class="h-14 w-14 bg-gray-300 rounded-xl object-cover">
           <div>
@@ -175,7 +179,57 @@ function DisplayTheEmplyers() {
 
     EmpLister.innerHTML = html;
 }
+//HEre is the part of showing the profile
+function openProfile(index) {
+    const employees = JSON.parse(localStorage.getItem("employees")) || [];
+    const emp = employees[index];
 
+    // Set profile info
+    document.getElementById("profilePhoto").src = emp.img;
+    document.getElementById("profileName").textContent = emp.name;
+    document.getElementById("profileRole").textContent = emp.role;
+    document.getElementById("profileEmail").textContent = emp.email;
+    document.getElementById("profilePhone").textContent = emp.phone;
 
+    // Experience list
+    const expContainer = document.getElementById("profileExperience");
+    expContainer.innerHTML = "";
 
-//RGX
+    emp.experiences.forEach(exp => {
+        expContainer.innerHTML += `
+          <div class="border p-2 rounded-lg bg-gray-50">
+            <p><strong>${exp.jobTitle}</strong></p>
+            <p>Company : ${exp.Company}</p>
+            <p>${exp.startDate} → ${exp.endDate}</p>
+          </div>
+        `;
+    });
+// Show modal
+    document.getElementById("profileModal").classList.remove("hidden");
+}
+document.getElementById("closeProfile").addEventListener("click", () => {
+    document.getElementById("profileModal").classList.add("hidden");
+});
+
+document.getElementById("profileModal").addEventListener("click", (e) => {
+    if (e.target.id === "profileModal") {
+        document.getElementById("profileModal").classList.add("hidden");
+    }
+});
+document.getElementById("profileModal").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        document.getElementById("profileModal").classList.add("hidden");
+    }
+});
+
+//here is the zone logic
+
+document.addEventListener('click', (x) =>{
+  if(x.target.classList.contains("floorzoonbtn")){
+     document.querySelector(".pickerZone").classList.remove("hidden");
+     
+  }
+})
+document.querySelector(".pickerZone").addEventListener('click', (e) =>{
+  document.querySelector(".pickerZone").classList.add("hidden");
+})
