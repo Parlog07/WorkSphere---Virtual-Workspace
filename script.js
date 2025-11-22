@@ -316,9 +316,9 @@ function displayEmployeesInZones() {
             `[data-zone='${emp.currentZone}']`
         ).parentElement.querySelector(".zone-display");
 
-        zoneDiv.innerHTML = `
+        zoneDiv.innerHTML += `
             <div class="flex flex-col items-center">
-                <img src="${emp.img || ''}" class="h-10 w-10 rounded-full object-cover border mb-1">
+                <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-10 w-10 rounded-full object-cover border mb-1">
                 <p class="text-white">${emp.name}</p>
 
                 <button onclick="removeFromZone('${emp.name}')"
