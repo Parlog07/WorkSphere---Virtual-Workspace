@@ -273,7 +273,7 @@ function openZonePicker(zone) {
                  class="cursor-pointer w-[90%] bg-white p-2 rounded-lg flex gap-2 items-center hover:bg-gray-200 duration-200">
 
                 <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-12 w-12 rounded-lg object-cover bg-gray-300">
-                <div>
+                <div class = "flex flex-col">
                     <h4 class="font-bold">${emp.name}</h4>
                     <p class="text-sm text-gray-600">${emp.role}</p>
                 </div>
