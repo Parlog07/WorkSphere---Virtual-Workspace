@@ -280,7 +280,7 @@ function openZonePicker(zone) {
             </div>
         `;
     });
-
+    
     picker.classList.remove("hidden");
 }
 function assignEmployeeToZone(name, zone) {
@@ -296,7 +296,7 @@ function assignEmployeeToZone(name, zone) {
     localStorage.setItem("employees", JSON.stringify(employees));
 
     document.querySelector(".pickerZone").classList.add("hidden");
-
+    
     displayEmployeesInZones();
 
     alert(`${name} assigned to ${zone}`);
@@ -305,43 +305,53 @@ function assignEmployeeToZone(name, zone) {
 }
 
 function displayEmployeesInZones() {
-    const employees = JSON.parse(localStorage.getItem("employees")) || [];
+  const employees = JSON.parse(localStorage.getItem("employees")) || [];
 
-    document.querySelectorAll(".zone-display").forEach(z => z.innerHTML = "");
+  document.querySelectorAll(".zone-display").forEach(z => z.innerHTML = "");
 
-    employees.forEach(emp => {
-        if (!emp.currentZone) return;
+  employees.forEach(emp => {
+    if (!emp.currentZone) return;
 
-        const zoneDiv = document.querySelector(
-            `[data-zone='${emp.currentZone}']`
-        ).parentElement.querySelector(".zone-display");
+    const zoneDiv = document.querySelector(
+      `[data-zone='${emp.currentZone}']`
+    ).parentElement.querySelector(".zone-display");
 
-        zoneDiv.innerHTML += `
-            <div class="flex flex-col items-center">
-                <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-10 w-10 rounded-full object-cover border mb-1">
-                <p class="text-white">${emp.name}</p>
+    const avatar = document.createElement("div");
+    avatar.className = "relative";
 
-                <button onclick="removeFromZone('${emp.name}')"
-                    class="mt-1 bg-red-600 text-white px-2 py-1 rounded text-xs">
-                    Remove
-                </button>
-            </div>
-        `;
-    });
-}
-function removeFromZone(name) {
-    let employees = JSON.parse(localStorage.getItem("employees")) || [];
+    avatar.innerHTML = `
+  <img src="${emp.img || "https://via.placeholder.com/50"}"
+       class="h-5 w-5 md:h-14 md:w-14 rounded-full object-cover border shadow-md">
 
-    employees = employees.map(emp => {
-        if (emp.name === name) {
-            emp.currentZone = null;
-        }
-        return emp;
+  <button class="absolute -top-1 -right-1 md:-top-2 md:-right-2 
+                 bg-red-600 text-white text-[8px] md:text-xs
+                 w-3 h-3 md:w-5 md:h-5 rounded-full flex justify-center items-center removeFromZone">
+    ×
+  </button>
+`;
+
+
+    avatar.querySelector(".removeFromZone").addEventListener("click", (e) => {
+      e.stopPropagation();
+      removeEmployeeFromZone(emp.name);
     });
 
-    localStorage.setItem("employees", JSON.stringify(employees));
-
-    DisplayTheEmplyers();
-    displayEmployeesInZones();
+    zoneDiv.appendChild(avatar);
+  });
 }
 
+function removeEmployeeFromZone(name) {
+  let employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+  employees = employees.map(emp => {
+    if (emp.name === name) delete emp.currentZone;
+    return emp;
+  });
+
+  localStorage.setItem("employees", JSON.stringify(employees));
+
+  DisplayTheEmplyers();
+  displayEmployeesInZones();
+}
+
+                                        
