@@ -26,6 +26,7 @@ document.addEventListener('keydown', (e)=> {
 affichage.addEventListener('click', (e)=>{
     if(e.target.id === "formulaire") affichage.classList.add("hidden");
 })
+
 // diplay the pisct on review zone
  const photoInput = document.querySelector("#employeePhotoInput");
   const photoPreview = document.querySelector("#photoPreview");
@@ -134,12 +135,20 @@ affichage.addEventListener('click', (e)=>{
         const endDate = block.querySelector(".end-date").value;
 
         if (!startDate || !endDate) {
-            alert("Please fill both start and end dates.");
+          Toastify({
+          text: "Please fill both start and end dates.",
+          duration: 3000,
+          style:{background : "red"}
+          }).showToast();
             return;
         }
 
         if (new Date(startDate) >= new Date(endDate)) {
-            alert("Start date must be earlier than end date.");
+            Toastify({
+          text: "Start date must be earlier than end date.",
+          duration: 3000,
+          style:{background : "red"}
+          }).showToast();
             return;
         }
 
@@ -199,14 +208,12 @@ function openProfile(index) {
     const employees = JSON.parse(localStorage.getItem("employees")) || [];
     const emp = employees[index];
 
-    // Set profile info
     document.getElementById("profilePhoto").src = emp.img;
     document.getElementById("profileName").textContent = emp.name;
     document.getElementById("profileRole").textContent = emp.role;
     document.getElementById("profileEmail").textContent = emp.email;
     document.getElementById("profilePhone").textContent = emp.phone;
 
-    // Experience list
     const expContainer = document.getElementById("profileExperience");
     expContainer.innerHTML = "";
 
@@ -272,7 +279,7 @@ function openZonePicker(zone) {
             <div onclick="assignEmployeeToZone('${emp.name}', '${zone}')"
                  class="cursor-pointer w-[90%] bg-white p-2 rounded-lg flex gap-2 items-center hover:bg-gray-200 duration-200">
 
-                <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-12 w-12 rounded-lg object-cover bg-gray-300">
+                <img src="${emp.img  || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}" class="h-12 w-12 rounded-lg object-cover bg-gray-300">
                 <div class = "flex flex-col">
                     <h4 class="font-bold">${emp.name}</h4>
                     <p class="text-sm text-gray-600">${emp.role}</p>
@@ -299,7 +306,11 @@ function assignEmployeeToZone(name, zone) {
     
     displayEmployeesInZones();
 
-    alert(`${name} assigned to ${zone}`);
+    Toastify({
+          text: `${name} assigned to ${zone}`,
+          duration: 3000,
+          style:{background : "green"}
+          }).showToast();
 
     DisplayTheEmplyers();
 }
