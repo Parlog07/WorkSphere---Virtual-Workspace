@@ -190,7 +190,7 @@ function DisplayTheEmplyers() {
         html += `
         <div onclick="openProfile(${index})"
             class="cursor-pointer flex w-[80%] h-16 bg-white gap-2 rounded-xl items-center p-2 hover:bg-gray-200 duration-200">
-          <img src="${emp.img || 'https://via.placeholder.com/150'}"
+          <img src="${emp.img || 'https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc'}"
                class="h-14 w-14 bg-gray-300 rounded-xl object-cover">
           <div>
             <h6 class="font-bold">${emp.name}</h6>
@@ -331,15 +331,15 @@ function displayEmployeesInZones() {
     avatar.className = "relative";
 
     avatar.innerHTML = `
-  <img src="${emp.img || "https://via.placeholder.com/50"}"
-       class="h-5 w-5 md:h-14 md:w-14 rounded-full object-cover border shadow-md">
+      <img src="${emp.img || "https://imgs.search.brave.com/mx4FHmRkf-poBv6wFCvrny2b1Dptn5BeKBwcUjdtcds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjQv/NTE0LzU0MS9zbWFs/bC8zZC1pY29uLW9m/LW1lbi1wcm9maWxl/LXBlb3BsZS1mcmVl/LXBuZy5wbmc"}"
+          class="h-5 w-5 md:h-14 md:w-14 rounded-full object-cover border shadow-md">
 
-  <button class="absolute -top-1 -right-1 md:-top-2 md:-right-2 
-                 bg-red-600 text-white text-[8px] md:text-xs
-                 w-3 h-3 md:w-5 md:h-5 rounded-full flex justify-center items-center removeFromZone">
-    ×
-  </button>
-`;
+      <button class="absolute -top-1 -right-1 md:-top-2 md:-right-2 
+                    bg-red-600 text-white text-[8px] md:text-xs
+                    w-3 h-3 md:w-5 md:h-5 rounded-full flex justify-center items-center removeFromZone">
+        ×
+      </button>
+    `;
 
 
     avatar.querySelector(".removeFromZone").addEventListener("click", (e) => {
